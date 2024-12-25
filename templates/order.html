@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Dark Mode</title>
+
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #f1f1f1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-color: #1e1e1e;
+    border-radius: 15px;
+    padding: 20px;
+    width: 80%;
+    max-width: 1000px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cart-header {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.cart-table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background-color: #444;
+}
+
+.cart-item {
+    background-color: #2c2c2c;
+}
+
+.cart-item:hover {
+    background-color: #3c3c3c;
+}
+
+.quantity {
+    width: 50px;
+    padding: 5px;
+    background-color: #333;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.item-total {
+    color: #ffbb33;
+}
+
+.cart-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.total-container {
+    font-size: 1.5em;
+}
+
+.confirm-btn {
+    background-color: #ff6600;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.confirm-btn:hover {
+    background-color: #e65c00;
+}
+
+.confirm-btn:active {
+    background-color: #cc5200;
+}
+</style>
+<body>
+
+<div class="container">
+    <h1 class="cart-header">Your Cart</h1>
+    <div class="cart-table-container">
+        <table id="cartTable">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="cart-item">
+                    <td>{{ product.name }}</td>
+                    <td>${{ product.price }}</td>
+                    <td><input type="number" value="{{ product.quantity }}" class="quantity" min="1" /></td>
+                    <td class="item-total">${{ product.price * product.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="cart-footer">
+        <div class="total-container">
+            <span>Total: </span><span id="totalAmount">${{ sum(p.price * p.quantity for p in products) }}</span>
+        </div>
+        <button id="confirmOrderBtn" class="confirm-btn">Confirm Order</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const quantityInputs = document.querySelectorAll('.quantity');
+    const totalAmount = document.getElementById('totalAmount');
+    const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+    const cartItems = document.querySelectorAll('.cart-item');
+
+    // Function to calculate the total price
+    function updateTotal() {
+        let total = 0;
+
+        cartItems.forEach((item, index) => {
+            const price = parseFloat(item.children[1].textContent.replace('$', ''));
+            const quantity = parseInt(item.querySelector('.quantity').value);
+            const itemTotal = price * quantity;
+
+            item.querySelector('.item-total').textContent = `$${itemTotal.toFixed(2)}`;
+            total += itemTotal;
+        });
+
+        totalAmount.textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Event listener for quantity change
+    quantityInputs.forEach(input => {
+        input.addEventListener('input', updateTotal);
+    });
+
+    // Confirm order functionality
+    confirmOrderBtn.addEventListener('click', async () => {
+        const response = await fetch('/confirm_order', {
+            method: 'POST',
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+            alert(result.message);
+
+            // Remove all items from the cart after confirmation
+            cartItems.forEach(item => {
+                item.remove();
+            });
+
+            // Reset the total to 0
+            totalAmount.textContent = '$0.00';
+        }
+    });
+
+    // Initialize total on page load
+    updateTotal();
+});
+</script>
+</body>
+</html>

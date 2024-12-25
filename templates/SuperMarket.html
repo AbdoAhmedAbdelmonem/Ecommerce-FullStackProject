@@ -1,0 +1,2163 @@
+    <!DOCTYPE html>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .cnt{
+            display: grid;
+            justify-content: center;
+            justify-items: center;
+            grid-template-columns: repeat(4, 1fr);
+            /*background-color: #1e1e1e;*/
+        }
+
+        .product-container {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            width: 300px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .product-container img {
+            width: 100%;
+            border-radius: 8px;
+            height: 300px;
+        }
+
+        .product-container h2 {
+            margin: 15px 0;
+            font-size: 1.5em;
+        }
+
+        .product-container p {
+            font-size: 1em;
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .product-container .product-id {
+            font-weight: bold;
+        }
+
+        .product-container .product-country {
+            font-weight: bold;
+            color: #58d68d;
+        }
+
+        .product-container .valid-date {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .button {
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #3498db;
+        }
+
+
+/* Overlay Background for Dark Mode */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+/* Show Popup when Overlay is Active */
+.popup-overlay.show {
+  display: flex;
+  opacity: 1;
+  animation: fadeIn 0.5s forwards;
+}
+
+/* Popup Container - Wider for 3 Column Layout */
+.popup {
+  background-color: #2c2c2c;
+  width: 500px; /* Increased width for a wider popup */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(0.8);
+  animation: popupAnimation 0.5s ease-in-out forwards;
+}
+
+/* Popup Animation */
+@keyframes popupAnimation {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Header Styling */
+.popup-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f1f1f1;
+  margin-bottom: 20px;
+}
+
+/* Body Styling with Grid Layout (3 Columns) */
+.popup-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 columns in one row */
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.popup-body p {
+  font-size: 16px;
+  color: #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #3a3a3a;
+  transition: background-color 0.3s ease;
+}
+
+.popup-body p:hover {
+  background-color: #555;
+}
+
+.number-display {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0 20px;
+  padding: 10px;
+  background-color: #444;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.number-display:hover {
+  background-color: #666;
+}
+
+/* Arrow Buttons */
+.arrow {
+  background-color: #007b7f;
+  color: white;
+  border: none;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.arrow:hover {
+  background-color: #005f5d;
+}
+
+/* Total Price Styling */
+#total-spend {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00bcd4;
+}
+
+/* Radio Button Group */
+.radio-button-group {
+  grid-column: span 3; /* Makes radio button group span all three columns */
+}
+
+.radio-button-group label {
+  font-size: 16px;
+  color: #ccc;
+  margin: 5px 0;
+}
+
+/* Footer */
+.popup-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  background-color: #007b7f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #005f5d;
+}
+
+/* Close Button (Cancel) */
+#cancel {
+  background-color: #f44336;
+}
+
+#cancel:hover {
+  background-color: #d32f2f;
+}
+
+/* Fade In Animation for the Overlay */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Zain', sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+        :root{
+            --main-color : #ffb500;
+        }
+        .header{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 110%;
+            padding: 2rem 12% 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+            animation: changeColors 390s infinite ease-in-out;
+            height: 1px;
+        }
+        .highlight {
+            color: #3498db;
+            font-size: 20px;
+         }
+
+        .navbar{
+            animation: slide-in-right 1.9s ease-in-out;
+        }
+        .logo {
+            position: relative;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            display: inline-block;
+            z-index: 1;
+            margin-left: -40px;
+        }
+
+        .logo .IEEE_logo {
+            position: relative;
+            top: 0;
+            left: -40px;
+            width: 90%;
+            height: auto;
+            z-index:10;
+            pointer-events: none;
+            opacity: 1;
+            animation: slide-in-left 1s ease-in-out;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(1.5em);
+        }
+        .navbar a{
+            font-size:1rem ;
+            color: white;
+            margin-left: 4rem;
+            font-weight: 500;
+            transition: 0.3s ease;
+            border-bottom: 3px solid transparent;
+            animation: slide-in-left 1s ease-in-out forwards
+        }
+        .navbar a:hover,.navbar a.active{
+            color: var(--main-color);
+            border-bottom: 3px solid var(--main-color);
+        }
+        #menu-icon{
+            font-size: 3.6rem;
+            color: var(--main-color);
+            display: none;
+        }
+        section{
+            min-height: 100vh;
+            padding: 10rem 12% 10rem;
+        }
+        .home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+            text-align: center;
+            background-color: #04116b;
+        }
+        .home-content{
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: center;
+            margin-top: 3rem;
+            text-align: center;
+            display: grid;
+            justify-items: center;
+        }
+        span{
+            color: var(--main-color);
+        }
+        .logo span{
+            color: var(--main-color);
+        }
+        .home-content h3{
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            font-size:3.5rem ;
+            animation: slide-in-down 1.5s ease-in-out forwards;
+            text-align: center;
+
+        }
+        .home-content h1{
+            font-size: 6.6rem;
+            font-weight: 700;
+            line-height: 1;
+            animation: slide-in-down 1s ease-in-out forwards;
+            text-align: center;
+            margin-top: -60px;
+        }
+
+        .home-content p{
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.8;
+            max-width: 650px;
+            animation: slide-in-down 1.5s ease-in-out forwards;
+            text-align: center;
+            justify-content: center;
+        }
+        h1{
+          text-align: center;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 66px;
+            color: var(--main-color);
+        }
+        a{
+            text-decoration: none;
+        }
+
+        .category img, .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .category h3, .item h3 {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 50px;
+          position: relative;
+          padding: 0 20px;
+          font-size: 18px;
+          text-transform: uppercase;
+          border: 0;
+          box-shadow: hsl(210deg 87% 36%) 0px 7px 0px 0px;
+          background-color: hsl(210deg 100% 44%);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          cursor: pointer;
+        }
+
+        button:hover {
+          transform: translateY(-3px);
+          box-shadow: hsl(210deg 87% 36%) 0px 10px 15px -3px;
+        }
+
+        #cancel {
+            box-shadow: hsl(0, 90%, 34%) 0px 7px 0px 0px;
+            background-color: hsl(0, 100%, 57%);
+        }
+
+        button:before {
+            content: attr(alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            inset: 0;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--main-color);
+            letter-spacing: 4px;
+            opacity: 1;
+        }
+
+        button:active {
+            box-shadow: none;
+            transform: translateY(7px);
+            transition: 35ms cubic-bezier(.5, .7, .4, 1);
+        }
+
+        button:hover:before {
+            transition: all .0s;
+            transform: translateY(100%);
+            opacity: 0;
+            cursor: pointer;
+
+        }
+        img{
+            width: 150px;
+        }
+        button i {
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            font-style: normal;
+            transition: all 2s ease;
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        button:hover i {
+            transition: all .2s ease;
+            transform: translateY(0px);
+            opacity: 1;
+        }
+        button:hover{
+            cursor: pointer;
+        }
+        button:hover i:nth-child(1) {
+            transition-delay: 0.045s;
+        }
+
+        button:hover i:nth-child(2) {
+            transition-delay: calc(0.045s * 2);
+        }
+
+        button:hover i:nth-child(3) {
+            transition-delay: calc(0.045s * 3);
+        }
+
+        button:hover i:nth-child(4) {
+            transition-delay: calc(0.045s * 4);
+        }
+        button:hover i:nth-child(5) {
+            transition-delay: calc(0.045s * 5);
+        }
+
+        button:hover i:nth-child(6) {
+            transition-delay: calc(0.045s * 6);
+        }
+
+        button:hover i:nth-child(7) {
+            transition-delay: calc(0.045s * 7);
+        }
+
+        button:hover i:nth-child(8) {
+            transition-delay: calc(0.045s * 8);
+        }
+
+        button:hover i:nth-child(9) {
+            transition-delay: calc(0.045s * 9);
+        }
+
+        button:hover i:nth-child(10) {
+            transition-delay: calc(0.045s * 10);
+        }
+        button:hover i:nth-child(11) {
+            transition-delay: calc(0.045s * 11);
+        }
+        button:hover i:nth-child(12) {
+            transition-delay: calc(0.045s * 12);
+        }
+        button:hover i:nth-child(13) {
+            transition-delay: calc(0.045s * 13);
+        }
+        button:hover i:nth-child(14) {
+            transition-delay: calc(0.045s * 14);
+        }
+        button:hover i:nth-child(15) {
+            transition-delay: calc(0.045s * 15);
+        }
+        /*#vanta-bg {*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    position: fixed;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*    z-index: -1;*/
+        /*}*/
+        .container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+        .animated-bg {
+  animation: slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, #6a0dad 50%, #9b5de5 50%);
+  position: fixed;
+  top: 0;
+  left: -50%;
+  bottom: 0;
+  right: -50%;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.animated-bg2 {
+  animation-direction: alternate-reverse;
+  animation-duration: 4s;
+}
+
+.animated-bg3 {
+  animation-duration: 5s;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(25%);
+  }
+}
+/* From Uiverse.io by SelfMadeSystem */
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.3rem;
+  --stroke: #666;
+  --fill: #ffc73a;
+}
+
+.rating input {
+  appearance: unset;
+}
+
+.rating label {
+  cursor: pointer;
+}
+
+.rating svg {
+  width: 2rem;
+  height: 2rem;
+  overflow: visible;
+  fill: transparent;
+  stroke: var(--stroke);
+  stroke-linejoin: bevel;
+  stroke-dasharray: 12;
+  animation: idle 4s linear infinite;
+  transition: stroke 0.2s, fill 0.5s;
+}
+
+@keyframes idle {
+  from {
+    stroke-dashoffset: 24;
+  }
+}
+
+.rating label:hover svg {
+  stroke: var(--fill);
+}
+
+.rating input:checked ~ label svg {
+  transition: 0s;
+  animation: idle 4s linear infinite, yippee 0.75s backwards;
+  fill: var(--fill);
+  stroke: var(--fill);
+  stroke-opacity: 0;
+  stroke-dasharray: 0;
+  stroke-linejoin: miter;
+  stroke-width: 8px;
+}
+
+@keyframes yippee {
+  0% {
+    transform: scale(1);
+    fill: var(--fill);
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke: var(--stroke);
+    stroke-dasharray: 10;
+    stroke-width: 1px;
+    stroke-linejoin: bevel;
+  }
+
+  30% {
+    transform: scale(0);
+    fill: var(--fill);
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke: var(--stroke);
+    stroke-dasharray: 10;
+    stroke-width: 1px;
+    stroke-linejoin: bevel;
+  }
+
+  30.1% {
+    stroke: var(--fill);
+    stroke-dasharray: 0;
+    stroke-linejoin: miter;
+    stroke-width: 8px;
+  }
+
+  60% {
+    transform: scale(1.2);
+    fill: var(--fill);
+  }
+}
+.circular-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the buttons and number section */
+}
+
+.number-display {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  background: linear-gradient(to bottom right, #f7f9fc, #d7e6f1);
+  border: 4px solid #3498db;
+  border-radius: 10px; /* Square with slightly rounded corners */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.arrow {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%; /* Makes the buttons circular */
+  background-color: #2980b9;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.arrow:hover {
+  transform: scale(1.1);
+  background-color: #1f6391;
+}
+/* From Uiverse.io by Na3ar-17 */
+.radio-input {
+  flex-direction: column;
+}
+
+.radio-input * {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.radio-input label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0px 20px;
+  width: 220px;
+  cursor: pointer;
+  height: 50px;
+  position: relative;
+}
+
+.radio-input label::before {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 45px;
+  z-index: -1;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+.radio-input label:hover::before {
+  transition: all 0.2s ease;
+  background-color: #2a2e3c;
+}
+
+.radio-input .label:has(input:checked)::before {
+  background-color: #2d3750;
+  border-color: #435dd8;
+  height: 50px;
+}
+.radio-input .label .text {
+  color: #fff;
+}
+
+.radio-input .label input[type="radio"] {
+  background-color: #202030;
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.radio-input .label input[type="radio"]:checked {
+  background-color: #435dd8;
+  -webkit-animation: puls 0.7s forwards;
+  animation: pulse 0.7s forwards;
+}
+
+.radio-input .label input[type="radio"]:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background-color: #fff;
+  transform: scale(0);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+
+
+    </style>
+</head>
+<body>
+<header class="header">
+<!--    <a href="#home" class="logo" style="color: var(&#45;&#45;main-color)">عم اشرف ماركت</a>-->
+    <img src="../static/images/Blue_Minimalist_brand_Logo__1_-removebg-preview.png" alt="">
+
+    <i class='bx bx-menu' id="menu-icon"></i>
+    <nav class="navbar">
+        <a href="#home" class="active">Market</a>
+        <a href="#" class="popo">Professional Team</a>
+        <a href="/tables">System DataBases</a>
+        <a href="/profile">{{firstname}}'s Profile</a>
+    </nav>
+</header>
+    <section class="container" id="home" style="border-bottom: 2px solid var(--main-color)">
+          <div class="animated-bg"></div>
+          <div class="animated-bg animated-bg2"></div>
+          <div class="animated-bg animated-bg3"></div>
+        <div class="home-content">
+            <h1 style="color: white"> Welcome! to Our Market<br> <span> {{firstname}} {{lastname}}<h3 style="font-size: 30px; color: white">World of Innovation and Development in One Full Stack Project</h3></span> </h1>
+            <div class="btn-group">
+                <a href="" class="btn">
+                    <div class="btn-container">
+                        <a class="btn-content" href="#cnt">
+                            <button alt="Start Journey" id="go">
+                                <i>S</i>
+                                <i>t</i>
+                                <i>a</i>
+                                <i>r</i>
+                                <i>t</i>
+                                <i>&nbsp;</i>
+                                <i>S</i>
+                                <i>h</i>
+                                <i>o</i>
+                                <i>p</i>
+                                <i>p</i>
+                                <i>i</i>
+                                <i>n</i>
+                                <i>g</i>
+                            </button>
+                        </a>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+<h1>Foods and Drinks Department 🍔</h1>
+<div class="cnt" id="cnt">
+    <div class="product-container">
+        <h2>Cheese Burger</h2>
+        <img src="../static/images/cheeseburger.png" alt="Product Image">
+        <p class="product-id">Product ID: 203265</p>
+        <p class="product-country">Country of manufacture: USA</p>
+        <p class="valid-date">Validation Date: 2024-12-30</p>
+        <p class="price">19.99$</p>
+
+          <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-0" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-0" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-0" value="3" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-0" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-0" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Cheese Burger', '203265','Karam ElSham', 'USA', '2024-12-30', 19.99,'A delicious cheeseburger with all the fixings')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Aquafina 1 Liter</h2>
+        <img src="../static/images/65e139520bb09149517ea6fe-aquafina-purified-drinking-water-1.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 203267</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: 2025-12-31</p>
+        <p class="price">2.99$</p>
+          <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-1" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-1" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-1" value="3" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-1" value="4" >
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-1" value="5">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Aquafina 1 Liter', '203267','Aquafina', 'Egypt', '2025-12-31', 2.99,'Purified drinking water',)">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Smith's Chips 60G</h2>
+        <img src="../static/images/2873158.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 203268</p>
+        <p class="product-country">Country of manufacture: Germany</p>
+        <p class="valid-date">Validation Date: 2025-6-7</p>
+        <p class="price">13.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-2" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-2" value="2" checked >
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-2" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-2" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-2" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Smith\'s Chips 60G', '203268','Smith\'s', 'Germany', '2025-6-7', 13.99,'Crispy chips with vinegar flavor')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Tropicana Orange Juice</h2>
+        <img src="../static/images/Tropicana-Pure-Premium-Original-No-Pulp-100-Orange-Juice-46-Fl-Oz-Bottle_6f94bdc3-e12b-4366-bd7c-80001baee01a.b0e55c463b6fb53dd32c9b25df73cd04.webp" alt="Product Image">
+        <p class="product-id">Product ID: 203269</p>
+        <p class="product-country">Country of manufacture: Japan</p>
+        <p class="valid-date">Validation Date: 2025-3-21</p>
+        <p class="price">5.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-3" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-3" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-3" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-3" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-3" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Tropicana Orange Juice', '203269','Tropicana', 'Japan', '2025-3-21', 5.99,'Tropicana 100% pure orange juice')">Buy Now</button>
+    </div>
+</div>
+<br>
+<hr>
+<hr>
+<hr>
+<h1>Electronics Department 💻</h1>
+<div class="cnt">
+    <div class="product-container">
+        <h2>Dell G15 5530 13th Generation RTX 3060</h2>
+        <img src="../static/images/Dell-G15-5530-Gaming-Laptop-15-6-inch-FHD-1920x1080-165Hz-Display-Core-i7-13650HX-16GB-DDR5-RAM-512GB-SSD-NVIDIA-GeForce-RTX-4050-Intel-Wi-Fi-6-Windo_ff38d9d0-e059-4f06-869d-5114f9048420.4a4eadcccb6.avif" alt="Product Image">
+        <p class="product-id">Product ID: 304460</p>
+        <p class="product-country">Country of manufacture: USA</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">1099.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-5" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-5" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-5" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-5" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-5" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Laptop Dell G15 13th Generation RTX 3060', '304460','Dell', 'USA', 'None', 1099.99,'Gaming laptop with RTX 3060 graphics card')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>IPhone 16 ProMax 512GB 12GB RAM</h2>
+        <img src="../static/images/Black-Titanium-1-1-scaled-e1725928544197.webp" alt="Product Image">
+        <p class="product-id">Product ID: 304461</p>
+        <p class="product-country">Country of manufacture: USA</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">999.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-6" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-6" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-6" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-6" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-6" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('IPhone 16 ProMax 512GB 12GB RAM', '304461','Apple', 'USA', 'None', 999.99,'Premium smartphone with 512GB storage')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>ReDragon Gaming Monitor 165HZ 2K</h2>
+        <img src="../static/images/71knnNVMQTL.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 304462</p>
+        <p class="product-country">Country of manufacture: China</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">399.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-7" value="1" >
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-7" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-7" value="3" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-7" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-7" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('ReDragon Gaming Monitor 165HZ 2K', '304462','ReDragon', 'China', 'None', 399.99,'2K resolution gaming monitor with 165Hz refresh rate')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Samsung Galaxy S24 Ultra 512GB 12GB RAM</h2>
+        <img src="../static/images/4323ba4f92a8ce3479cdd29b02837b5247c16860e7812dd2faf18b97dac6981d.jpeg" alt="Product Image">
+        <p class="product-id">Product ID: 304463</p>
+        <p class="product-country">Country of manufacture: South Korea</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">899.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-8" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-8" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-8" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-8" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-8" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Samsung Galaxy S24 Ultra 512GB 12GB RAM', '304463','SAMSUNG', 'South Korea', 'None', 899.99,'High-end smartphone with 512GB storage and 12GB RAM')">Buy Now</button>
+    </div>
+</div>
+<br>
+<hr>
+<hr>
+<hr>
+<h1>Studying Tools Department 📝</h1>
+<div class="cnt">
+    <div class="product-container">
+        <h2>Uni-ball Eye Broad UB-150-10 Pen, 1.00mm, Red ink</h2>
+        <img src="../static/images/51J3OZjtGmL._AC_SL1000_.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 409662</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">1.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-9" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-9" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-9" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-9" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-9" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Uni-ball Eye Broad UB-150-10 Rollerball pen, 1.00mm, Red ink', '409662','Uni-ball', 'Egypt', 'None', 1.99,'High-quality red ink pen')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Ruler 25 CM With Durable Material</h2>
+        <img src="../static/images/514ig6+Qx9L._AC_SX679_.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 409663</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">0.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-10" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-10" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-10" value="3" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-10" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-10" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Ruler 25 CM With Durable Material', '409963','Prima', 'Egypt', 'None', 0.99,'Durable 25 cm ruler for precision measurements')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Premium Notebook - 100 Pages, 15 x 8in</h2>
+        <img src="../static/images/61ggLosC4hL._AC_SL1500_.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 409664</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">2.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-11" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-11" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-11" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-11" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-11" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Premium Notebook - 100 Pages, 15 x 8in', '409964','KMS', 'Egypt', 'None', 2.99, 'Premium quality notebook for everyday use')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Faber-Castell Eraser, Black, 120245</h2>
+        <img src="../static/images/51fOsUbzVFL._AC_SX679_.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 409665</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: No Validation Date</p>
+        <p class="price">1.5$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-12" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-12" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-12" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-12" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-12" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Faber-Castell Eraser, Black, 120245', '409965','Faber-Castell', 'Egypt', 'None', 1.50,'High-quality black eraser')">Buy Now</button>
+    </div>
+</div>
+<br>
+<hr>
+<hr>
+<h1>Meats and Chickens Department 🥩</h1>
+<div class="cnt">
+    <div class="product-container">
+        <h2>1KG of Stick Brazilian Meat</h2>
+        <img src="../static/images/KMC_RIBEYE_8OZ_1k.webp" alt="Product Image">
+        <p class="product-id">Product ID: 502211</p>
+        <p class="product-country">Country of manufacture: Brazil</p>
+        <p class="valid-date">Validation Date: 2025-6-14</p>
+        <p class="price">40.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-13" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-13" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-13" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-13" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-13" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('1KG of Stick Brazilian Meat', '502211','Braziliana', 'Brazil', '2025-6-14', 40.99, 'Premium Brazilian beef sticks')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Americana Nuggets 800g</h2>
+        <img src="../static/images/americana-chicken-nuggets.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 502212</p>
+        <p class="product-country">Country of manufacture: Saudi Arabia</p>
+        <p class="valid-date">Validation Date: 2026-12-31</p>
+        <p class="price">11.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-14" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-14" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-14" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-14" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-14" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Americana Nuggets 800g', '502212','Americana', 'Saudi Arabia', '2026-12-31', 11.99,'Frozen chicken nuggets')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Breaded chicken Strips 610g</h2>
+        <img src="../static/images/80456_perd_ss_lightly_breaded_chicken_strip_pk_fv_clean_640.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 502213</p>
+        <p class="product-country">Country of manufacture: USA</p>
+        <p class="valid-date">Validation Date: 2025-1-23</p>
+        <p class="price">19.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-15" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-15" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-15" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-15" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-15" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Breaded chicken Strips 610g', '502213','Perdue', 'USA', '2025-1-23', 19.99,'Crispy breaded chicken strips')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>My Meat minced meat 900g</h2>
+        <img src="../static/images/6224008853114-900_1_.webp" alt="Product Image">
+        <p class="product-id">Product ID: 502214</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: 2025-4-26</p>
+        <p class="price">17.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-16" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-16" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-16" value="3" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-16" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-16" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('My Meat minced meat 900g', '502214','Egypt Foods', 'Egypt', '2025-4-26', 17.99,'Fresh minced meat for cooking')">Buy Now</button>
+    </div>
+</div>
+<br>
+<hr>
+<hr>
+<h1>Seafoods Department 🐟</h1>
+<div class="cnt">
+    <div class="product-container">
+        <h2>1kg of Fresh Raw Salmon</h2>
+        <img src="../static/images/salamon.webp" alt="Product Image">
+        <p class="product-id">Product ID: 603356</p>
+        <p class="product-country">Country of manufacture: Egypt </p>
+        <p class="valid-date">Validation Date: 2025-6-12</p>
+        <p class="price">139.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-1" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-17" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-17" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-17" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-17" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('1kg of Fresh Salmon', '603356','Lobster', 'Egypt', '2025-6-12', 139.99,'High-quality raw salmon for cooking')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>1kg of Fresh Shrimps</h2>
+        <img src="../static/images/shrimp.webp" alt="Product Image">
+        <p class="product-id">Product ID: 603357</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: 2026-5-31</p>
+        <p class="price">99.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-18" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-18" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-18" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-18" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-18" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('1kg of Fresh Shrimps', '603357','Lobster', 'Egypt', '2026-5-31', 99.99,'Premium fresh shrimps for cooking')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>1kg of Fresh Wild Fishes</h2>
+        <img src="../static/images/fish.webp" alt="Product Image">
+        <p class="product-id">Product ID: 603358</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: 2025-3-23</p>
+        <p class="price">49.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-19" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-19" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-19" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-19" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-19" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('1kg of Fresh Fishes', '603358','Lobster', 'Egypt', '2025-3-23', 49.99, 'Fresh wild-caught fishes for cooking')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>1kg of Fresh Crabs</h2>
+        <img src="../static/images/craps.webp" alt="Product Image">
+        <p class="product-id">Product ID: 603359</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: 2025-4-26</p>
+        <p class="price">69.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-20" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-20" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-20" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-20" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-20" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('1kg of Fresh Crabs', '603359','Lobster', 'Egypt', '2025-4-26', 69.99,'Fresh crabs for seafood lovers')">Buy Now</button>
+    </div>
+</div>
+<br>
+<hr>
+<hr>
+<h1>Papers Department 🧻</h1>
+<div class="cnt">
+    <div class="product-container">
+        <h2>Familia 650 napkins</h2>
+        <img src="../static/images/71M8nsW+G+L.jpg" alt="Product Image">
+        <p class="product-id">Product ID: 705252</p>
+        <p class="product-country">Country of manufacture: Egypt </p>
+        <p class="valid-date">Validation Date: no Validation Date</p>
+        <p class="price">9.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-21" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-21" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-21" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-21" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-21" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Familia 650 napkins', '705252','Familia Egypt', 'Egypt', 'none', 9.99,'High-quality paper napkins')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Pampers baby-dry 17 Diapers</h2>
+        <img src="../static/images/WUhcmuiGZoqEYsZ3a8Ru5T86StrnON9j6Ks0vXbv.webp" alt="Product Image">
+        <p class="product-id">Product ID: 705253</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: no Validation Date</p>
+        <p class="price">17.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-22" value="1" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-22" value="2">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-22" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-22" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-22" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Pampers baby-dry 17 Diapers', '705253','Pampers', 'Egypt', 'none', 17.99,'Soft and absorbent baby diapers')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>Aluminium Foil 1kg</h2>
+        <img src="../static/images/foil.webp" alt="Product Image">
+        <p class="product-id">Product ID: 705254</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: no Validation Date</p>
+        <p class="price">4.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-23" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-23" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-23" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-23" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-23" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('Aluminium Foil 1kg', '705254','Generic', 'Egypt', 'none', 4.99,'Heavy-duty aluminum foil')">Buy Now</button>
+    </div>
+    <div class="product-container">
+        <h2>30 piece of Carton Cups</h2>
+        <img src="../static/images/30%20cup.webp" alt="Product Image">
+        <p class="product-id">Product ID: 705255</p>
+        <p class="product-country">Country of manufacture: Egypt</p>
+        <p class="valid-date">Validation Date: no Validation Date</p>
+        <p class="price">6.99$</p>
+         <div class="rating-container">
+    <div class="rating" style="justify-content: center;display: flex">
+      <input type="radio" name="rating-24" value="1">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-24" value="2" checked>
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+      <input type="radio" name="rating-24" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-24" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+        <input type="radio" name="rating-24" value="3">
+      <label>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path pathLength="360" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"></path>
+        </svg>
+      </label>
+    </div>
+  </div>
+        <button class="button" onclick="showPopup('30 piece of Carton Cups', '705255','Generic', 'Egypt', 'none', 6.99,'Durable carton cups for beverages')">Buy Now</button>
+    </div>
+</div>
+
+<!-- Popup for adding to cart -->
+<div id="popupOverlay" class="popup-overlay">
+    <div class="popup">
+        <div class="popup-header" id="popupProductName"></div>
+        <div class="popup-body">
+            <p id="popupProductId"></p>
+            <p id="popupProductPrice"></p>
+            <p id="popupProductCountry"></p>
+            <p id="popupValidDate"></p>
+            <p id ="popupProductBrand"></p>
+            <div class="circular-counter">
+              <button class="arrow left-arrow" onclick="decrement()">&#9664;</button>
+              <div class="number-display" id="number-display">1</div>
+              <button class="arrow right-arrow" onclick="increment()">&#9654;</button>
+            </div>
+            <p>The Total Price is: <span id="total-spend" style="font-size: 30px">0.00</span>$</p>
+            <p>Description: <span id="desc"></span></p>
+
+            <div class="radio-button-group">
+                <div class="radio-input">
+                  <label class="label">
+                    <input type="radio" id="value-1" name="paymentMethod" value="Credit Card"/>
+                    <p class="text" style="background-color: transparent">Credit Card</p>
+                  </label>
+                  <label class="label">
+                    <input type="radio" id="value-2" name="paymentMethod" value="Cash on Delivery" />
+                    <p class="text" style="background-color: transparent">Cash On Delivery</p>
+                  </label>
+                  <label class="label">
+                    <input type="radio" id="PayPal" name="paymentMethod" value="PayPal" />
+                    <p class="text" style="background-color: transparent">PayPal</p>
+                  </label>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="popup-footer">
+            <button class="button" onclick="addToCart()">Add to Cart</button>
+            <button class="button" onclick="closePopup()" id="cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="footer-content">
+        <p style="font-size: 30px">All rights reserved to the electronic market 2025&copy;</p>
+        <ul class="footer-links" style="margin-bottom: 30px;">
+            <li><a href="#">Privacy Policies</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Our creative team</a></li>
+        </ul>
+        <hr style="color: #ffa200">
+        <h2 style="margin-top: 30px;">Oruva - Chameleon Branch</h2>
+        <img src="../static/images/1212-removebg-preview.png" alt="">
+    </div>
+</footer>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>-->
+<script>
+    let global_price = 1;
+    let counter = 1;
+    function showPopup(productName, productId,Brand, productCountry, validDate, price,description) {
+        global_price = price; // Update global_price as soon as the popup is shown// Add class to the span for styling
+        document.getElementById('popupProductName').innerHTML = 'Name: <span class="highlight">' + productName + '</span>';
+        document.getElementById('popupProductId').innerHTML = 'Product ID: <span class="highlight">' + productId + '</span>';
+        document.getElementById('popupProductBrand').innerHTML = 'Brand: <span class="highlight">' + Brand + '</span>';
+        document.getElementById('popupProductCountry').innerHTML = 'Country of manufacture: <span class="highlight">' + productCountry + '</span>';
+        document.getElementById('popupValidDate').innerHTML = 'Validation Date: <span class="highlight">' + validDate + '</span>';
+        document.getElementById('popupProductPrice').innerHTML = 'Price Per Unit: $<span class="highlight">' + price + '</span>';
+        document.getElementById('total-spend').textContent = (counter*global_price).toFixed(2);
+        document.getElementById('desc').textContent = description;
+
+        document.getElementById('popupOverlay').style.display = 'flex';
+    }
+
+    function closePopup() {
+        document.getElementById('popupOverlay').style.display = 'none';
+        const display = document.querySelector('.number-display');
+        display.textContent='1'
+        counter = 1;
+    }
+
+
+    function addToCart() {
+        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        const productName = document.getElementById('popupProductName').textContent.split(": ")[1];
+        const Brand = document.getElementById('popupProductBrand').textContent.split(": ")[1];
+        const productId = document.getElementById('popupProductId').textContent.split(": ")[1];
+        const productCountry = document.getElementById('popupProductCountry').textContent.split(": ")[1];
+        const validDate = document.getElementById('popupValidDate').textContent.split(": ")[1];
+        const price = parseFloat(document.getElementById('popupProductPrice').textContent.split("$")[1]);
+        const total = parseFloat(document.getElementById('total-spend').textContent)
+        const Quantity = counter;
+        global_price=price;
+
+        if (selectedPaymentMethod) {
+            const paymentMethod = selectedPaymentMethod.value;
+            let state = "";
+            if(paymentMethod === "Cash on Delivery"){
+                state = "Pending";
+            }else{
+                state = "Completed"
+            }
+
+            const productData = {
+                product_name: productName,
+                product_id: productId,
+                product_brand:Brand,
+                product_Country: productCountry,
+                valid_date: validDate,
+                price: global_price,
+                payment_method: paymentMethod,
+                quantity:Quantity,
+                total:total,
+                state:state,
+            };
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    closePopup();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to add product to cart.');
+                });
+        } else {
+            alert('Please select a payment method.');
+        }
+    }
+    document.getElementById("go").addEventListener("click", function () {
+  document.getElementById("cnt").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
+//     VANTA.CLOUDS({
+//       el: "#vanta-bg",
+//       mouseControls: true,
+//       touchControls: true,
+//       gyroControls: false,
+//       minHeight: 200.00,
+//       minWidth: 200.00,
+//       backgroundColor: 0xf1bd4,
+//       skyColor: 0x8110e8,
+//       cloudColor: 0xc5c5c5,
+//       sunColor: 0x0,
+//       speed: 1.80
+// })
+document.querySelectorAll('.rating').forEach((rating, index) => {
+      const inputs = rating.querySelectorAll('input[type="radio"]');
+      const labels = rating.querySelectorAll('label');
+      inputs.forEach((input, idx) => {
+        const uniqueId = `rating-${index}-star-${idx}`;
+        input.id = uniqueId;
+        labels[idx].setAttribute('for', uniqueId);
+      });
+    });
+
+function updateDisplay() {
+  // Use querySelector to select elements based on classes or ids.
+  const display = document.querySelector('.number-display');  // Select by class
+  const total = document.getElementById('total-spend');  // This is fine as it's a unique ID.
+
+  // Update the number display
+  display.textContent = counter;
+
+  // Update the total price
+  if(counter === 1){
+    total.textContent = global_price.toFixed(2);  // Display the price when counter is 1
+  } else {
+    total.textContent = (counter * global_price).toFixed(2);  // Display total price when counter > 1
+  }
+}
+
+function increment() {
+  counter++;
+  updateDisplay();
+}
+
+function decrement() {
+  if (counter > 1) {
+    counter--;
+  } else {
+    counter = 1; // Keep the counter above 1 or make it circular
+  }
+  updateDisplay();
+}
+
+
+</script>
+</body>
+</html>

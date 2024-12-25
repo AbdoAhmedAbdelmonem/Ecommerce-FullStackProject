@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile</title>
+    <style>
+        body {
+            font-family: Alexandria, sans-serif;
+            background-color: #121212;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            max-width: 1150px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            justify-content: space-around;
+        }
+        .platform{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .profile-image img {
+            width: 220px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .personal-details h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #f5f5f5;
+        }
+
+        .personal-details p {
+            margin: 5px 0;
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+
+        .transactions table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table{
+            width: 100%;
+            margin: auto;
+            border-radius: 13px;
+            padding-bottom: 30px;
+        }
+
+        .transactions th, .transactions td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .transactions th {
+            background-color: #333;
+            color: #efb94c;
+        }
+
+        .transactions tr:nth-child(even) {
+            background-color: #222;
+        }
+
+        .transactions tr:hover {
+            background-color: #444;
+        }
+
+        .transactions td {
+            color: #bbb;
+        }
+        span{
+            color: #efb94c;
+        }
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            background-color: transparent;
+            padding: 10px 0;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #333;
+            border: none;
+            outline: none;
+            transition: background-color 0.3s, color 0.3s;
+            color: #ffffff;
+        }
+        .tab:hover {
+            background-color: #444;
+        }
+        #vanta-bg {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+        .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    color: #f5f5f5;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #efb94c;
+}
+
+.popup-content input {
+    width: 90%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #efb94c;
+    color: #1e1e1e;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.edit-btn, .delete-btn {
+    background-color: #444;
+    color: #efb94c;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    background-color: #555;
+}
+.cancel-btn {
+    background-color: #ff5555;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #ff4444;
+}
+
+
+    </style>
+</head>
+<body>
+<div id="vanta-bg"></div>
+<div class="tab-container">
+    <button class="tab" style="color: #efb94c;">{{customer.first_name}}'s profile</button>
+    <a href="/success"><button class="tab">Back to Main</button></a>
+</div>
+
+<div class="profile-container">
+    <div class="platform">
+        <div class="profile-header">
+            <div class="profile-image">
+                <img src="../static/images/img.png" alt="Profile Image" />
+            </div>
+            <div class="personal-details">
+                <h1>{{ customer.first_name + " " + customer.last_name }}</h1>
+                <h3>ID: <span >{{ customer.customer_id }}</span></h3>
+                <p class="phone">Phone: <span>{{ customer.phone }}</span></p>
+                <p>Birth Date: <span>{{ customer.birth_date }}</span></p>
+                <p>Email: <span>{{ customer.Email }}</span></p>
+                <p>Address: <span>{{ customer.Address }}</span></p>
+                <button class="edit-btn" onclick="openEditPopup()">✏️ Edit</button>
+                <button class="delete-btn" onclick="openDeletePopup()">❌ Delete Account</button>
+            </div>
+        </div>
+        <div class="progress">
+                <p>Number of Orders : <span style="font-family: 'Alexandria', sans-serif;font-size: 20px;font-weight: bold">{{TransCount}}</span></p>
+                <p>Total Spending : <span style="font-family: 'Alexandria', sans-serif;font-size: 20px;font-weight: bold">{{TotalSpending}}$</span></p>
+        </div>
+
+        <!-- Edit Popup -->
+        <div id="edit-popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeEditPopup()">×</span>
+                <h3>Edit Details</h3>
+                <form id="edit-form" onsubmit="submitEdit(event)">
+                    <label for="edit-first-name">First Name:</label>
+                    <input type="text" id="edit-first-name" name="first_name" value="{{ customer.first_name }}" style="background-color: #000000;color: #ffa200">
+
+                    <label for="edit-last-name">Last Name:</label>
+                    <input type="text" id="edit-last-name" name="last_name" value="{{ customer.last_name }}" style="background-color: #000000;color: #ffa200">
+
+                    <label for="edit-phone">Phone Number:</label>
+                    <input type="text" id="edit-phone" name="phone" value="{{ customer.phone }}" style="background-color: #000000;color: #ffa200">
+
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Popup -->
+        <div id="delete-popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeDeletePopup()">×</span>
+                <h3>Are you sure you want to delete your account?</h3>
+                <button onclick="confirmDelete()">Yes, Delete</button>
+                <button onclick="closeDeletePopup()">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="transactions">
+        <h2 style="margin-left: 55px">Recent Transactions</h2>
+        <div class="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Trans ID</th>
+                    <th>Product ID</th>
+                    <th>Order Supplier</th>
+                    <th>Qty</th>
+                    <th>Price PP</th>
+                    <th>Total Paid</th>
+                    <th>Payment Method</th>
+                    <th>Payment Date</th>
+                    <th>Payment Status</th>
+                    <th>Track Order</th>
+                    <th>Cancellability</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if transactions %}
+                    {% for row in transactions %}
+                        <tr>
+                            <td>{{ row.order_id}}</td>
+                            <td>{{ row.product_id }}</td>
+                            <td>{{ row.first_name }}</td>
+                            <td>{{ row.quantity }}</td>
+                            <td>{{ row.product_price }}</td>
+                            <td>{{ row.Total_Spend }}</td>
+                            <td>{{ row.payment_method}}</td>
+                            <td>{{ row.payment_date}}</td>
+                            <td style="color: #ffa200">🟡{{ row.payment_status}}</td>
+                            <td><button class="cancel-btn" onclick="trackOrder('{{ row.order_id }}')" style="background-color: #17d930">Track</button></td>
+                            <td><button class="cancel-btn" onclick="openCancelPopup('{{ row.order_id }}')">Cancel</button></td>
+
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="10">No transactions available</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <a href="/login" style="text-decoration: none;color: #b62c2c; margin-left: 256px">Some changes may not be saved properly so you may have to <span style="text-decoration: underline">Log in</span> Again</a>
+    </div>
+    <div id="cancel-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closeCancelPopup()">×</span>
+        <h3>Are you sure you want to cancel this transaction?</h3>
+        <p>Transaction ID: <span id="cancel-transaction-id"></span></p>
+        <button onclick="confirmCancel()">Yes, Cancel</button>
+        <button onclick="closeCancelPopup()">No, Keep It</button>
+    </div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<script>
+function trackOrder(Id) {
+    console.log("Tracking Order ID:", Id);
+    const data = {
+        order_id: Id,
+    };
+    fetch('/track_order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)  // Send the data directly
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;  // Redirect to the new URL
+        } else {
+            return response.json().then(data => {
+                alert(`Failed to track the order: ${data.message}`);
+            });
+        }
+    })
+    .catch(error => {
+        alert('An error occurred while tracking the order.');
+    });
+}
+        VANTA.WAVES({
+        el: "#vanta-bg",
+        mouseControls: false,
+        touchControls: false,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x151515,
+        shininess: 150.00,
+        waveHeight: 40.00,
+        waveSpeed: 1.15,
+    })
+        function openEditPopup() {
+    document.getElementById("edit-popup").style.display = "flex";
+}
+function direct_home(){
+            fetch('/login')
+}
+
+function closeEditPopup() {
+    document.getElementById("edit-popup").style.display = "none";
+}
+
+function openDeletePopup() {
+    document.getElementById("delete-popup").style.display = "flex";
+}
+
+function closeDeletePopup() {
+    document.getElementById("delete-popup").style.display = "none";
+}
+const rows = document.querySelector(`td:contains("${transactionId}")`);
+if (rows) {
+    rows.closest('tr').remove();
+} else {
+    console.error('Transaction row not found.');
+}
+function openCancelPopup(transactionId) {
+    document.getElementById("cancel-transaction-id").innerText = transactionId;
+    document.getElementById("cancel-popup").style.display = "flex";
+}
+
+function closeCancelPopup() {
+    document.getElementById("cancel-popup").style.display = "none";
+}
+
+function confirmCancel() {
+    const transactionId = document.getElementById("cancel-transaction-id").innerText;
+
+    fetch('/cancel_transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transaction_id: transactionId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Transaction ${transactionId} has been canceled.`);
+            closeCancelPopup();
+            // Remove the row with the matching transaction ID
+            const row = document.querySelector(`[data-transaction-id="${transactionId}"]`);
+            if (row) row.closest('tr').remove();
+        } else {
+            alert(`Failed to cancel the transaction: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while canceling the transaction.');
+    });
+}
+function confirmDelete() {
+    fetch('/delete_account', {
+        method: 'POST', // Adjust the method if needed, e.g., DELETE
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            customer_id: '{{ customer.customer_id }}' // Pass any required data
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Your account has been deleted successfully!');
+            // Redirect to the homepage or login page
+            window.location.href = '/';
+        } else {
+            alert(`Failed to delete the account: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while deleting your account.');
+    });
+}
+function submitEdit(event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    const firstName = document.getElementById('edit-first-name').value;
+    const lastName = document.getElementById('edit-last-name').value;
+    const phone = document.getElementById('edit-phone').value;
+
+    fetch('/edit_profile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            customer_id: '{{ customer.customer_id }}', // Pass the current customer ID
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Profile updated successfully!');
+            // Update the profile information dynamically (optional)
+            document.querySelector('.personal-details h1').textContent = firstName + " " + lastName;
+            document.querySelector('.personal-details .phone').textContent = 'Phone: ' + phone;
+            closeEditPopup(); // Close the edit popup
+        } else {
+            alert(`Failed to update profile: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating your profile.');
+    });
+}
+
+
+</script>
+</body>
+</html>

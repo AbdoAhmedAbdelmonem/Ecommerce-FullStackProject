@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: "Alexandria Medium", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #121212;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            color: #fff;
+            position: relative;
+        }
+
+        /* Button Styling */
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background-color: #ffa200;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #e68900;
+        }
+
+        .order-details {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+            align-content: space-between;
+            flex-direction: row;
+        }
+
+        .order-card {
+            flex: 1 1 45%;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ffa200;
+            border-radius: 10px;
+            background: #2b2b2b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row;
+            height: 200px;
+        }
+
+        .order-card img {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+
+        }
+
+        .map-container {
+            margin-top: 20px;
+            border-radius: 10px;
+            height: 400px;
+        }
+
+        h2, h3 {
+            color: #ffa200;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .countdown {
+            font-size: 20px;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .connect {
+            width: 100px;
+            justify-content: center;
+            justify-items: center;
+            text-align: center;
+            font-size: 80px;
+        }
+        span{
+            color: #ffa200;
+        }
+        #vanta-bg {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+<div id="vanta-bg"></div>
+    <div class="container">
+        <div class="header">
+            <a href="/profile"><button class="back-button">Back to Main</button></a>
+            <h1>Track Your Order</h1>
+            <p>Stay updated on your order details and delivery status!</p>
+        </div>
+
+        <!-- Countdown for Estimated Arrival -->
+        <div class="countdown" id="countdown-timer">
+            <h3 style="color:white;">Estimated Arrival: <span id="countdown"></span></h3>
+        </div>
+
+        <!-- Order Details Section -->
+        <div class="order-details">
+            <!-- Order Card with Image on the Left -->
+            <div class="order-card" style="justify-content: space-between">
+                <div style="justify-items: left;">
+                    <h2 style="border-bottom: 2px solid #ffa200;border-left: 2px solid #ffa200;border-radius: 6px;">Order Details</h2>
+                    <p><strong>Customer ID:</strong> <span> {{transaction.customer_id}}</span></p>
+                    <p><strong>Customer Address:</strong> <span>{{transaction.customer_address}}</span></p>
+                    <p><strong>Order ID:</strong> <span>{{transaction.order_id}}</span></p>
+                    <p><strong>Total Retail:</strong> <span>{{transaction.Total_Spend}}</span></p>
+                </div>
+                <div>
+                    <img src="../static/images/img.png" alt="Order Image">
+                </div>
+            </div>
+
+            <div class="connect" style="color: #ffa200;margin-top: -20px;display: flex;">
+                <marquee direction="left">---- <br> 🚚 <br> ----</marquee>
+            </div>
+
+            <!-- Supplier Card with Image on the Right -->
+            <div class="order-card">
+
+                <img src="../static/images/employee-placeholder-male.jpg" alt="Supplier Image" style="margin-right: 20px;">
+                <div style="margin-top: -10px;">
+                    <h2 style="border-bottom: 2px solid #ffa200;border-left: 2px solid #ffa200;border-radius: 6px;">Supplier Details</h2>
+                    <p><strong>Supplier ID:</strong> <span>{{transaction.supplier_id}}</span></p>
+                    <p><strong>First Name:</strong> <span>{{transaction.supplier_first_name}}</span></p>
+                    <p><strong>Last Name:</strong> <span>{{transaction.supplier_last_name}}</span></p>
+                    <p><strong>Supplier Address:</strong><span> {{transaction.supplier_address}}</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <script>
+        VANTA.WAVES({
+            el: "#vanta-bg",
+            mouseControls: false,
+            touchControls: false,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x151515,
+            shininess: 150.00,
+            waveHeight: 40.00,
+            waveSpeed: 1.15,
+        })
+        // Initialize the map with Alexandria, Egypt as the center point
+        const map = L.map('map').setView([31.2156, 29.9553], 13); // Alexandria, Egypt
+
+        // Load and display tile layer from OpenStreetMap in dark mode
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors',
+            style: 'dark'
+        }).addTo(map);
+
+        // Function to get the user's location
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showUserLocation, handleLocationError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Show user's location on the map
+        function showUserLocation(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            // Set the map view to the user's location
+            map.setView([userLat, userLng], 13);
+
+            // Add a marker at the user's location
+            const userMarker = L.marker([userLat, userLng]).addTo(map);
+            userMarker.bindPopup("<b>Your Location</b><br>Latitude: " + userLat + "<br>Longitude: " + userLng).openPopup();
+        }
+
+        // Handle error when unable to get location
+        function handleLocationError(error) {
+            alert("Error getting your location: " + error.message);
+        }
+
+        // Get user location when the page loads
+        window.onload = getUserLocation;
+
+        // Add a marker for the delivery address
+        const deliveryMarker = L.marker([31.2156, 29.9553]).addTo(map); // Alexandria, Egypt (delivery location)
+        deliveryMarker.bindPopup("<b>Delivery Address</b><br>123 Main Street, Alexandria").openPopup();
+
+        // Countdown Timer (random estimate arrival)
+        const countdownElement = document.getElementById("countdown");
+        const arrivalTimeInMinutes = Math.floor(Math.random() * 60) + 20; // Random time between 20 and 80 minutes
+        let timeRemaining = arrivalTimeInMinutes * 60; // Convert to seconds
+
+        // Function to update the countdown timer
+        function updateCountdown() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            countdownElement.textContent = `${minutes}m ${seconds}s`;
+
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                countdownElement.textContent = "Your order has arrived!";
+            }
+        }
+
+        // Start the countdown when the page loads
+        window.onload = function() {
+            updateCountdown();
+            getUserLocation();
+        };
+    </script>
+</body>
+</html>

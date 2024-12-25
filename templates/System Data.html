@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Data Base</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+        }
+        /* Sidebar styles */
+        .sidebar {
+            width: 170px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #333;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            z-index: 100;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #333;
+            border: none;
+            outline: none;
+            transition: background-color 0.3s, color 0.3s;
+            color: #ffffff;
+            text-align: left;
+            width: 100%;
+            border-bottom: 1px solid #444;
+        }
+        .tab:hover {
+            background-color: #444;
+        }
+        .tab.active {
+            background-color: #1e1e1e;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        .content {
+            margin-left: 170px; /* Space for the sidebar */
+            padding: 20px;
+            background-color: #1e1e1e;
+            flex-grow: 1;
+            display: none;
+        }
+
+        .content.active{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        /* Table and other content styles */
+        table {
+            width: 700px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        thead {
+            background-color: #444;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #333;
+        }
+        th {
+            background-color: #ffcc00;
+            color: #121212;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+        tr:hover {
+            background-color: #444;
+        }
+        caption {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+
+        .products-grid {
+            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: #1c1a1a;
+            border: 2px solid #ffa200;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Card Hover Effect */
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card Header */
+        .card-header {
+            background: #1c1a1a;
+            padding: 10px;
+            border-bottom: 1px solid #ffa200;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #ffffff;
+        }
+
+        .card-header p {
+            margin: 5px 0 0;
+            color: #c0bfbf;
+        }
+
+        /* Card Body */
+        .card-body {
+            margin-top: 10px;
+        }
+
+        .card-body p {
+            margin: 10px 0;
+            font-size: 1em;
+            color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .product-card {
+                width: calc(33.333% - 20px); /* 3 items per row */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-card {
+                width: calc(50% - 20px); /* 2 items per row */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                width: 100%; /* 1 item per row */
+            }
+        }
+
+        .product-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .product-card img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            margin-left: 20px;
+            flex: 1;
+        }
+
+        .card-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .card-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .card-info .label {
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 800px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .table_cont {
+            width: calc(1200px); /* Makes the width 100% minus 170px */
+            overflow-x: auto; /* Ensures horizontal scroll if the content overflows */
+        }
+
+        /* Marquee styling */
+        marquee {
+            height: 700px;
+            width: 760px;
+            margin-top: 20px;
+            font-size: 30px;
+            text-align: center;
+            line-height: 50px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <button class="tab" onclick="openTab(event, 'Customers')">Customers Table</button>
+    <button class="tab" onclick="openTab(event, 'Products')">Available Products</button>
+    <button class="tab" onclick="openTab(event, 'Transactions')">All Transactions</button>
+    <button class="tab" onclick="openTab(event, 'Suppliers')">Our Suppliers</button>
+    <button class="tab" onclick="openTab(event, 'Team')">Team</button>
+    <a href="/success"><button class="tab">Back to Main</button></a>
+</div>
+
+<div id="Customers" class="content active">
+    {% for row in data %}
+    <div class="product-card">
+      <img src="../static/images/img.png" alt="User 1">
+      <div class="card-info">
+        <h3>{{row.first_name}} {{row.last_name}}</h3>
+        <p><span class="label">ID:</span> {{row.id}}</p>
+        <p><span class="label">Phone:</span> {{row.phone_number}}</p>
+        <p><span class="label">Date of Birth:</span> {{row.birth_date}}</p>
+        <p><span class="label">Address:</span> {{row.C_address}}</p>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="Products" class="content">
+    <div class="products-grid" >
+        {% for row in data2 %}
+        <div class="product-card">
+            <div class="card-header">
+                <h3>{{row.P_name}}</h3>
+                <p><strong>ID:</strong>{{row.id}}</p>
+            </div>
+            <div class="card-body">
+                <p><strong>Country: </strong>{{row.Product_Country}}</p>
+                <p><strong>Price: </strong>{{row.price}}</p>
+                <p><strong>Brand: </strong>{{row.brand}}</p>
+                <p><strong>Supplier ID: </strong>{{row.supplier_id}}</p>
+                <p><strong>Category ID: </strong>{{row.Category_ID}}</p>
+                <p><strong>Description: </strong>{{row.P_description}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="Transactions" class="content">
+    <div class="table_cont">
+
+    <table>
+        <caption>Transactions Table</caption>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Customer ID</th>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Product Price</th>
+            <th>Total Retail</th>
+            <th>Country</th>
+            <th>Payment method</th>
+            <th>Transaction Date</th>
+            <th>Transaction Status</th>
+            <th>Supplier Name</th>
+            <th>Supplier ID</th>
+        </tr>
+        {%for row in data3%}
+        <tr>
+            <td>{{row.order_id}}</td>
+            <td>{{row.C_ID}}</td>
+            <td>{{row.product_id}}</td>
+            <td>{{row.product_name}}</td>
+            <td>{{row.quantity}}</td>
+            <td>{{row.product_price}}</td>
+            <td>{{row.Total_Spend}}</td>
+            <td>{{row.product_country}}</td>
+            <td>{{row.payment_method}}</td>
+            <td>{{row.payment_date}}</td>
+            <td>{{row.payment_status}}</td>
+            <td>{{row.first_name}}</td>
+            <td>{{row.id}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+    </div>
+</div>
+
+<div id="Suppliers" class="content">
+    {% for row in data4 %}
+    <div class="product-card">
+      <img src="../static/images/employee-placeholder-male.jpg" alt="User 1">
+      <div class="card-info">
+        <h3>{{row.first_name}} {{row.last_name}}</h3>
+        <p><span class="label">ID:</span> {{row.id}}</p>
+        <p><span class="label">Phone:</span> {{row.phone_number}}</p>
+        <p><span class="label">Address:</span> {{row.S_address}}</p>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="Team" class="content">
+    <div class="">
+        <h1>Contact Us</h1>
+    </div>
+    <marquee direction="up" behavior="scroll" scrollamount="6">
+        <strong style="font-size: 36px;">Supermarket Project</strong>
+        <br> <em>A Modern Approach to Grocery Shopping</em>
+        <br> Bringing convenience to your doorstep
+        <hr>
+        <strong>Team Members:</strong>
+        <br> Abdelrahman Ahmed - GUI Developer
+        <br> Ali Hassan - Backend Developer
+        <br> Sara Mohamed - Project Manager
+        <br> Hany Ebrahim - Marketing Director
+        <br> Yasser Khaled - Data Scientist
+    </marquee>
+</div>
+
+<script>
+    function openTab(event, tabName) {
+        const allTabs = document.querySelectorAll('.content');
+        const allButtons = document.querySelectorAll('.tab');
+
+        allTabs.forEach(tab => tab.classList.remove('active'));
+        allButtons.forEach(button => button.classList.remove('active'));
+
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/images/style.css">
+    <title>Login Page</title>
+
+</head>
+<body>
+
+<div class="login-container">
+    <form class="form" action="/check_login" METHOD="post">
+        <div class="container">
+            <p class="title">Login to our Market </p>
+            <img src="../static/images/Blue_Minimalist_brand_Logo__1_-removebg-preview.png" alt="">
+        </div>
+        <p class="message">Login now and get full access to our Market and Basket </p>
+        <label>
+            <input required="" placeholder="" type="number" class="input2" name="customer_id">
+            <span>ID</span>
+        </label>
+
+        <label>
+            <input required="" placeholder="" type="text" class="input2"  name="firstname">
+            <span>First Name</span>
+        </label>
+        <div class="btn">
+            <button class="submit">Submit</button>
+        </div>
+        <p class="signin">Don't Have Account? <a href="/">Sign in</a> </p>
+    </form>
+</div>
+</body>
+</html>
